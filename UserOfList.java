@@ -8,8 +8,7 @@ public class UserOfList {
     public static void main( String[] args ) {
 
         // test newly-created, empty list
-        System.out.println( "empty list: " + list
-                          + System.lineSeparator());
+        System.out.println( "empty list: " + list + System.lineSeparator());
 
         /* Populate the list with elements.
            Create the test data in an array, for the programming

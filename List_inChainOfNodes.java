@@ -3,13 +3,15 @@
  */
 
 public class List_inChainOfNodes{
-    private Node headSentinel;
+    private Node sentinel;
      
     /**
       Construct an empty list
      */
     public List_inChainOfNodes() {
-        headSentinel = new Node( null, null, null);
+        sentinel = new Node( null, null, null);
+		sentinel.setNextNode(sentinel);
+		sentinel.setPreviousNode(sentinel);
     }
 
     /**
@@ -17,14 +19,14 @@ public class List_inChainOfNodes{
      */
     public int size() {
         // recursive approach seems more perspicuous
-        return size( headSentinel);
+        return size(sentinel);
     }
 
     // recursively-called helper
     private int size( Node startingAt) {
         Node next = startingAt.getNextNode();
-        if( next == null) return 0;
-        else return 1+ size( next);
+        if( next == sentinel) return 0;
+        else return 1 + size( next);
     }
 
 
@@ -32,37 +34,19 @@ public class List_inChainOfNodes{
        @return a string representation of this list,
        format:
            # elements [element0,element1,element2,]
-	*/	   
+		   
       
     public String toString() {
         String stringRep = size() + " elements [";
 
-        for( Node node = headSentinel.getNextNode()
-           ; node != null
+        for( Node node = sentinel.getNextNode()
+           ; node != sentinel
            ; node = node.getNextNode() )
             stringRep += node.getCargo() + ",";
         return stringRep + "]";
     }
-	
-	    /**
-      Demo use of links to previous Nodes.
-
-      @return a string representation of this list,
-              iterating through the list
-              from tail to head.
-      format, using ` as separator
-          [element0`element1`element2`]
-		  
-		  
-     
-    public String toString() {
-        String stringRep = "tail-first [";
-
-        for( Node node = getNode(size()-1); node!= null;node = node.getPreviousNode())
-            stringRep += node.getCargo() + "`";
-        return stringRep + "]";
-    }
 	*/
+	
 
 
     /**
@@ -71,13 +55,8 @@ public class List_inChainOfNodes{
       @return true, in keeping with conventions yet to be discussed
      */
      public boolean addAsHead( Object val) {
-		 Node newNode = new Node( val, headSentinel.getNextNode(),headSentinel);
-		 headSentinel.setNextNode(newNode);
-		 if (size() > 1)
-			getNode(1).setPreviousNode(newNode);
-        return true;
+		 return add(0,val);
      }
-
 
     /**
       @return a reference to the node before
@@ -89,7 +68,7 @@ public class List_inChainOfNodes{
            
         Node node;
         int upTo;  // comma operator precludes declaration in FOR
-        for( upTo = 0   , node = headSentinel
+        for( upTo = 0   , node = sentinel
            ; upTo < index
            ; upTo++     , node = node.getNextNode()
            )
@@ -100,7 +79,7 @@ public class List_inChainOfNodes{
 	private Node getNodeAfter(int index){
 		Node node;
 		int upTo;
-		for(upTo = 0,node=headSentinel;upTo<index+2;upTo++,node=node.getNextNode())
+		for(upTo = 0,node=sentinel;upTo<index+2;upTo++,node=node.getNextNode())
 			;
 		return node;
 	}
@@ -144,14 +123,9 @@ public class List_inChainOfNodes{
      */
     public boolean add( int index, Object value) {
         Node newNode = new Node( value);
-        Node afterNew = /* the node that should follow newNode
-          in the augmented list */
-          getNodeBefore( index).setNextNode( newNode);
-		if (index != size() - 1){
-		Node prevNew = getNodeAfter(index).setPreviousNode(newNode);
-		newNode.setPreviousNode(prevNew);
-		}
-        newNode.setNextNode( afterNew);
+        Node afterNew = getNodeBefore(index).getNextNode();
+		link(getNodeBefore(index),newNode);
+		link(newNode,afterNew);
         return true;
     }
 
@@ -165,14 +139,15 @@ public class List_inChainOfNodes{
       @return the value that was removed from the list
      */
     public Object remove( int index) {
-		Node before = getNodeBefore( index);
+		Node before = getNodeBefore(index);
         Node ax = before.getNextNode();
         Object saveForReturn = ax.getCargo();
-		if (index != size() - 1){
-			Node after = ax.getNextNode();
-			after.setPreviousNode(ax.getPreviousNode());
-		}
-		before.setNextNode( ax.getNextNode());
+		link(before,ax.getNextNode());
         return saveForReturn;
     }
+	
+	private void link(Node n1, Node n2){
+		 n2.setPreviousNode(n1);
+		 n1.setNextNode(n2);
+	}
 }

@@ -70,4 +70,5 @@ public class Node {
         cargo = newValue;
         return saveForReturn;
     }
+	
 }
