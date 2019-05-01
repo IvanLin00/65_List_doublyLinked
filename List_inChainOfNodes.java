@@ -34,7 +34,7 @@ public class List_inChainOfNodes{
        @return a string representation of this list,
        format:
            # elements [element0,element1,element2,]
-		   
+	*/	   
       
     public String toString() {
         String stringRep = size() + " elements [";
@@ -45,7 +45,7 @@ public class List_inChainOfNodes{
             stringRep += node.getCargo() + ",";
         return stringRep + "]";
     }
-	*/
+	
 	
 
 
